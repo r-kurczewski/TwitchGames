@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 362443eade3ee41d0954af52427d2f91
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 264406
+  packageName: All Platforms Save v2.0
+  packageVersion: 2.1.3
+  assetPath: Assets/Gley/AllPlatformsSave/Example/Scripts/GameValues.cs
+  uploadId: 695938
