@@ -506,7 +506,6 @@ GameObject:
   m_Component:
   - component: {fileID: 841089992}
   - component: {fileID: 841089993}
-  - component: {fileID: 841089991}
   - component: {fileID: 841089994}
   m_Layer: 0
   m_Name: TwitchIntegration
@@ -515,30 +514,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &841089991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 841089990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 148fe2a6161ca154ca5b7ad36b8bca41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clientId: f76d8zkbqu5nl6m8mqkp10cs5mtcb7
-  userData:
-    id: 
-    login: 
-    display_name: 
-    type: 
-    broadcaster_type: 
-    description: 
-    profile_image_url: 
-    offline_image_url: 
-    view_count: 0
-    created_at: 
 --- !u!4 &841089992
 Transform:
   m_ObjectHideFlags: 0
@@ -579,10 +554,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da5724f70b12c5418023911fe8b678c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  api: {fileID: 841089991}
+  clientId: f76d8zkbqu5nl6m8mqkp10cs5mtcb7
   chat: {fileID: 1458175263}
   tokenStorage: {fileID: 841089993}
   channelName: rimmar_
+  userData:
+    id: 
+    login: 
+    display_name: 
+    type: 
+    broadcaster_type: 
+    description: 
+    profile_image_url: 
+    offline_image_url: 
+    view_count: 0
+    created_at: 
   moveTarget: {fileID: 1028919394}
 --- !u!1 &1028919393
 GameObject:

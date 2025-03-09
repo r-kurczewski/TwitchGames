@@ -6,6 +6,9 @@ using UnityEngine;
 public class ChatController : MonoBehaviour
 {
 	[SerializeField]
+	private string clientId;
+
+	[SerializeField]
 	private TwitchApi api;
 
 	[SerializeField]
@@ -18,7 +21,15 @@ public class ChatController : MonoBehaviour
 	private string channelName;
 
 	[SerializeField]
+	private UserResponse.UserData userData;
+
+	[SerializeField]
 	private Transform moveTarget;
+
+	private void Awake()
+	{
+		api = new TwitchApi(tokenStorage, clientId);
+	}
 
 	public async void Start()
 	{
@@ -27,7 +38,7 @@ public class ChatController : MonoBehaviour
 			Debug.Log("Connecting to Twitch API...");
 			await ConnectToTwitchApi();
 
-			while (true)
+			while (Application.isPlaying)
 			{
 				await UniTask.Delay(TimeSpan.FromHours(1).Milliseconds, ignoreTimeScale: true);
 				await CheckTokenValidity();
@@ -55,10 +66,17 @@ public class ChatController : MonoBehaviour
 			await Authorize();
 		}
 
+		Debug.Log("Checking user validity...", this);
 		await CheckTokenValidity();
+
+		Debug.Log("Getting user data...", this);
+		userData = await api.GetUser();
 
 		Debug.Log("Opening chat connection...", this);
 		await OpenChat();
+
+		Debug.Log("Starting a poll...");
+		await api.CreatePoll(new PollRequest(userData.id,"Poll example", new[] {"A", "B", "C" }, 120, true, 50));
 	}
 
 	private async UniTask CheckTokenValidity()
@@ -78,7 +96,7 @@ public class ChatController : MonoBehaviour
 
 	private async Task<bool> ValidateToken()
 	{
-		bool isValid = await api.Validate(tokenStorage.Token);
+		bool isValid = await api.Validate();
 		if (!isValid) Debug.LogWarning("Token validation failed!", this);
 		return isValid;
 	}
@@ -90,9 +108,15 @@ public class ChatController : MonoBehaviour
 			Debug.LogError($"{nameof(channelName)} is empty", this);
 			return;
 		}
+		var login = userData?.login;
+		if (string.IsNullOrEmpty(login))
+		{
+			Debug.LogError($"{nameof(login)} is empty", this);
+			return;
+		}
 
-		Debug.Log($"Connecting to channel {channelName}...", this);
-		var chatConnection = await api.OpenChat(tokenStorage.Token, channelName);
+		Debug.Log($"Connecting user {login} to channel {channelName}...", this);
+		var chatConnection = await api.OpenChat(login, channelName);
 
 		Debug.Log($"{channelName} chat opened.", this);
 		chat.Init(chatConnection,
@@ -106,7 +130,7 @@ public class ChatController : MonoBehaviour
 	{
 		try
 		{
-			var token = await api.RefreshToken(tokenStorage.RefreshToken);
+			var token = await api.RefreshToken();
 			tokenStorage.UpdateTokens(token);
 		}
 		catch (Exception ex)

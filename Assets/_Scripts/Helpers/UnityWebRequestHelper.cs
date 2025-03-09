@@ -6,6 +6,9 @@ using UnityEngine.Networking;
 
 public static class UnityWebRequestHelper
 {
+	private const string clientIdHeader = "Client-Id";
+	private const string authorizationHeader = "Authorization";
+
 	public static async UniTask<T> SendRequest<T>(this UnityWebRequest req)
 	{
 		await req.SendWebRequest();
@@ -22,12 +25,24 @@ public static class UnityWebRequestHelper
 
 	public static async UniTask<HttpStatusCode> SendRequest(this UnityWebRequest req)
 	{
-		await req.SendWebRequest();
-		return (HttpStatusCode)req.responseCode;
+		try
+		{
+			await req.SendWebRequest();
+			return (HttpStatusCode)req.responseCode;
+		}
+		catch(UnityWebRequestException ex)
+		{
+			Debug.LogWarning($"Error sending request: {ex.Message}");
+			return (HttpStatusCode)ex.ResponseCode;
+		}
 	}
 
 	public static void AddAuthorization(this UnityWebRequest req, string token)
 	{
-		req.SetRequestHeader("Authorization", $"Bearer {token}");
+		req.SetRequestHeader(authorizationHeader, $"Bearer {token}");
+	}
+	public static void AddClientIdHeader(this UnityWebRequest req, string clientId)
+	{
+		req.SetRequestHeader(clientIdHeader, clientId);
 	}
 }
